@@ -20,10 +20,24 @@ const gameBoard = (function (){
 const players = (function (){
     const player1 = [];
     const player2 = [];
+
     function cellSelected(cell,playerTurn){
-        if(playerTurn) player1.push(cell);
-        else player2.push(cell);
+        if(playerTurn){
+            player1.push(cell);
+            player1.sort(function(a,b){return a - b});
+        } 
+        else{
+            player2.push(cell);
+            player2.sort(function(a,b){return a - b});
+        }
     }
+
+    function checkForWin(){
+        if(player1.length > 2){
+            
+        }
+    }
+
     return {cellSelected};
 })();
 
