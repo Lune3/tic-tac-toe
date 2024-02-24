@@ -5,6 +5,7 @@ const gameBoard = (function (){
     }
     function appendCell(cell,character){
         grid[cell] = character;
+        // console.log(grid);
     }
     function isAlreadyfilled(cell){
         if(grid[cell] != -1){
@@ -25,20 +26,59 @@ const players = (function (){
         if(playerTurn){
             player1.push(cell);
             player1.sort(function(a,b){return a - b});
+            console.log(player1);
         } 
         else{
             player2.push(cell);
             player2.sort(function(a,b){return a - b});
+            // console.log(player2);
         }
     }
 
-    function checkForWin(){
+    function checkForWin(){ 
         if(player1.length > 2){
-            
+            for(let i = 1;i <= 4;i++){
+                let flag = false;
+                for(let j = 0;j < player1.length - 1;j++){
+                    if(player1[j + 1] = player1[j] + 1){
+                        flag  = true;
+                    }
+                    else{
+                        flag = false;
+                    }
+                }
+                if(flag === true){
+                    return [true,1];
+                    break;
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        if(player2.length > 2){
+            for(let i = 1;i <= 4;i++){
+                let flag = false;
+                for(let j = 0;j < player2.length - 1;j++){
+                    if(player2[j + 1] = player2[j] + 1){
+                        flag  = true;
+                    }
+                    else{
+                        flag = false;
+                    }
+                }
+                if(flag === true){
+                    return [true,2];
+                    break;
+                }
+                else{
+                    return false;
+                }
+            }
         }
     }
 
-    return {cellSelected};
+    return {cellSelected,checkForWin};
 })();
 
 const gameFlow = function (){
@@ -62,7 +102,7 @@ const gameFlow = function (){
                 gameBoard.appendCell(cell,"O");
             }
 
-            playerTurn = 0;
+            playerTurn = !playerTurn;
         }
     }
     function checkForErrors(cell){
@@ -76,5 +116,7 @@ const gameFlow = function (){
     return {gameStart};
 }
 
+if(confirm("Ready to play")){
 const start = gameFlow();
 start.gameStart();
+}
