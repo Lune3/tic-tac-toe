@@ -3,10 +3,11 @@ const gameBoard = (function (){
     for(let i = 0;i < 9;i++){
         grid.push(-1);
     }
+
     function appendCell(cell,character){
         grid[cell] = character;
-        // console.log(grid);
     }
+
     function isAlreadyfilled(cell){
         if(grid[cell] != -1){
             return true;
@@ -26,12 +27,10 @@ const players = (function (){
         if(playerTurn){
             player1.push(cell);
             player1.sort(function(a,b){return a - b});
-            console.log(player1);
         } 
         else{
             player2.push(cell);
             player2.sort(function(a,b){return a - b});
-            // console.log(player2);
         }
     }
 
@@ -40,15 +39,16 @@ const players = (function (){
             for(let i = 1;i <= 4;i++){
                 let flag = false;
                 for(let j = 0;j < player1.length - 1;j++){
-                    if(player1[j + 1] = player1[j] + 1){
+                    if(player1[j + 1] = player1[j] + i){
                         flag  = true;
                     }
                     else{
                         flag = false;
+                        break;
                     }
                 }
                 if(flag === true){
-                    return [true,1];
+                    return 1;
                     break;
                 }
                 else{
@@ -60,7 +60,7 @@ const players = (function (){
             for(let i = 1;i <= 4;i++){
                 let flag = false;
                 for(let j = 0;j < player2.length - 1;j++){
-                    if(player2[j + 1] = player2[j] + 1){
+                    if(player2[j + 1] = player2[j] + i){
                         flag  = true;
                     }
                     else{
@@ -68,7 +68,7 @@ const players = (function (){
                     }
                 }
                 if(flag === true){
-                    return [true,2];
+                    return 2;
                     break;
                 }
                 else{
@@ -82,24 +82,33 @@ const players = (function (){
 })();
 
 const gameFlow = function (){
-    let playerTurn = 1;
+    let playerTurn = true;
 
     function gameStart(){
         for(let i = 0;i < 9;i++){
 
-            let cell = parseInt(prompt("Select your cell")) - 1;
+            let cell = parseInt(prompt(`Player${+playerTurn + 1}`)) - 1;
 
             while(checkForErrors(cell)){
-                cell = parseInt(prompt("Select a valid cell")) - 1;
+                cell = parseInt(prompt(`Select a valid cell player${+playerTurn + 1}`)) - 1;
             }
 
-            if(playerTurn === 1){
+            if(playerTurn){
                 players.cellSelected(cell,playerTurn);
                 gameBoard.appendCell(cell,"X");
+                let winningPlayer = players.checkForWin();
+                if(winningPlayer !== false && winningPlayer === 1){
+                    endGame(1);
+                    break;
+                }
             }
             else{
                 players.cellSelected(cell,playerTurn);
                 gameBoard.appendCell(cell,"O");
+                let winningPlayer = players.checkForWin();
+                if(winningPlayer !== false && winningPlayer === 2){
+                    endGame(2);
+                }
             }
 
             playerTurn = !playerTurn;
@@ -111,6 +120,15 @@ const gameFlow = function (){
         }
         else{
         return false;
+        }
+    }
+
+    function endGame(winningArr){
+        if(winningArr === 1){
+            alert("Player 1 has won the game");
+        }
+        else{
+            alert("Player 2 has won the game");
         }
     }
     return {gameStart};
