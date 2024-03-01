@@ -27,28 +27,57 @@ const players = (function (){
         if(!playerTurn){
             player1.push(cell);
             player1.sort(function(a,b){return a - b});
-            console.log("Player 1 turns are = ",player1);
         } 
         else{
             player2.push(cell);
             player2.sort(function(a,b){return a - b});
-            console.log("Player 2 turns are = ",player2);
         }
     }
 
     function checkForWinP1(){ 
         const winningPattern = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
         if(player1.length >= 3){
-            for(let i = 0;i < player1.length;i++){
+            for(let i = 0;player1.length - i >= 3;i++){
                 const tempArr = [];
                 for(let j = 0;j < 3;j++){
-                    tempArr.push(player1)
+                    tempArr.push(player1[j + i]);
                 }
+                // console.log(tempArr);
+                    winningPattern.forEach(pattern => {
+                        console.log(pattern);
+                        // if(tempArr[0] === pattern[0] && tempArr[1] === pattern[1] && tempArr[2] === pattern[2])return true;
+                        for(let i = 0;i < 3;i++){
+                            if(pattern[i] != tempArr[i]){
+                                return false;
+                            }
+                        }
+                    });
             }
         }
+        return false;
     }
 
-    return {cellSelected,checkForWin};
+    function checkForWinP2(){ 
+        const winningPattern = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        if(player2.length >= 3){
+            for(let i = 0;player2.length - i >= 3;i++){
+                const tempArr = [];
+                for(let j = 0;j < 3;j++){
+                    tempArr.push(player2[j + i]);
+                }
+                // console.log(tempArr);
+                    winningPattern.forEach(pattern => {
+                        console.log(pattern);
+                        if(tempArr[0] === pattern[0] && tempArr[1] === pattern[1] && tempArr[2] === pattern[2] ){ 
+                            return true;
+                        }
+                    });
+            }
+        }
+        return false;
+    }
+
+    return {cellSelected,checkForWinP1,checkForWinP2};
 })();
 
 const gameFlow = function (){
@@ -66,20 +95,20 @@ const gameFlow = function (){
             if(playerTurn){
                 players.cellSelected(cell,playerTurn);
                 gameBoard.appendCell(cell,"X");
-                let winningPlayer = players.checkForWin();
-                // if(winningPlayer === 1){
-                //     endGame(1);
-                //     break;
-                // }
+                let winningPlayer = players.checkForWinP1();
+                if(winningPlayer === true){
+                    endGame(1);
+                    break;
+                }
             }
             else{
                 players.cellSelected(cell,playerTurn);
                 gameBoard.appendCell(cell,"O");
-                let winningPlayer = players.checkForWin();
-                // if(winningPlayer === 2){
-                //     endGame(2);
-                //     break;
-                // }
+                let winningPlayer = players.checkForWinP2();
+                if(winningPlayer === true){
+                    endGame(2);
+                    break;
+                }
             }
 
             playerTurn = !playerTurn;
@@ -102,7 +131,7 @@ const gameFlow = function (){
             alert("Player 2 has won the game");
         }
     }
-    return {gameStart};
+    return {gameStart,endGame};
 }
 
 if(confirm("Ready to play")){
