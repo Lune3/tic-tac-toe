@@ -24,13 +24,15 @@ const players = (function (){
     const player2 = [];
 
     function cellSelected(cell,playerTurn){
-        if(playerTurn){
+        if(!playerTurn){
             player1.push(cell);
             player1.sort(function(a,b){return a - b});
+            console.log("player 1 = ",player1);
         } 
         else{
             player2.push(cell);
             player2.sort(function(a,b){return a - b});
+            console.log("player 2 = ",player2);
         }
     }
 
@@ -76,44 +78,64 @@ const players = (function (){
         }
         return false;
     }
-
     return {cellSelected,checkForWinP1,checkForWinP2};
 })();
 
 const gameFlow = function (){
     let playerTurn = false;
 
+    const grid = document.querySelectorAll("li");
+    
+
     function gameStart(){
-        for(let i = 0;i < 9;i++){
+        // for(let i = 0;i < 9;i++){
 
-            let cell = parseInt(prompt(`Player${+playerTurn + 1}`)) - 1;
+        //     // let cell = parseInt(prompt(`Player${+playerTurn + 1}`)) - 1;
 
-            while(checkForErrors(cell)){
-                cell = parseInt(prompt(`Select a valid cell player${+playerTurn + 1}`)) - 1;
-            }
+        //     while(checkForErrors(cell)){
+        //         // cell = parseInt(prompt(`Select a valid cell player${+playerTurn + 1}`)) - 1;
+        //     }
 
-            if(!playerTurn){
-                players.cellSelected(cell,!playerTurn);
-                gameBoard.appendCell(cell,"X");
-                let winningPlayer = players.checkForWinP1();
-                if(winningPlayer === true){
-                    endGame(1);
-                    return ;
+        //     if(!playerTurn){
+        //         players.cellSelected(cell,!playerTurn);
+        //         gameBoard.appendCell(cell,"X");
+        //         let winningPlayer = players.checkForWinP1();
+        //         if(winningPlayer === true){
+        //             endGame(1);
+        //             return ;
+        //         }
+        //     }
+        //     else{
+        //         players.cellSelected(cell,!playerTurn);
+        //         gameBoard.appendCell(cell,"O");
+        //         let winningPlayer = players.checkForWinP2();
+        //         if(winningPlayer === true){
+        //             endGame(2);
+        //             return ;
+        //         }
+        //     }
+
+        //     playerTurn = !playerTurn;
+        // }
+        // endGame(3);
+        grid.forEach(containers => {
+            containers.addEventListener("click" , (e) =>{
+                let cell = e.target.className;
+                cell = parseInt(cell.charAt(cell.length - 1));
+                players.cellSelected(cell,playerTurn); 
+                if(playerTurn){
+                    const circle = document.createElement("img");
+                    circle.src = "Images/1811_circle.png";
+                    e.target.appendChild(circle); 
                 }
-            }
-            else{
-                players.cellSelected(cell,!playerTurn);
-                gameBoard.appendCell(cell,"O");
-                let winningPlayer = players.checkForWinP2();
-                if(winningPlayer === true){
-                    endGame(2);
-                    return ;
+                else{
+                    const cross = document.createElement("img");
+                    cross.src = "Images/cross-23.png";
+                    e.target.appendChild(cross);
                 }
-            }
-
-            playerTurn = !playerTurn;
-        }
-        endGame(3);
+                playerTurn = !playerTurn;
+            })
+        });
     }
     function checkForErrors(cell){
         if(typeof(cell) != "number" ||cell < 0 || cell > 8 ||gameBoard.isAlreadyfilled(cell)){
@@ -138,7 +160,5 @@ const gameFlow = function (){
     return {gameStart,endGame};
 }
 
-if(confirm("Ready to play")){
 const start = gameFlow();
 start.gameStart();
-}
