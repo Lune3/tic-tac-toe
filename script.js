@@ -98,7 +98,7 @@ const gameFlow = function (){
                 let winningPlayer = players.checkForWinP1();
                 if(winningPlayer === true){
                     endGame(1);
-                    break;
+                    return ;
                 }
             }
             else{
@@ -107,12 +107,13 @@ const gameFlow = function (){
                 let winningPlayer = players.checkForWinP2();
                 if(winningPlayer === true){
                     endGame(2);
-                    break;
+                    return ;
                 }
             }
 
             playerTurn = !playerTurn;
         }
+        endGame(3);
     }
     function checkForErrors(cell){
         if(typeof(cell) != "number" ||cell < 0 || cell > 8 ||gameBoard.isAlreadyfilled(cell)){
@@ -127,8 +128,11 @@ const gameFlow = function (){
         if(winningArr === 1){
             alert("Player 1 has won the game");
         }
-        else{
+        else if(winningArr === 2){
             alert("Player 2 has won the game");
+        }
+        else{
+            alert("It's a tie");
         }
     }
     return {gameStart,endGame};
