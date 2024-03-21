@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 body{
     display: flex;
     flex-direction: column;
@@ -6,6 +7,10 @@ body{
 }
 
 h1{
+    font-size: 2.5rem;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
     align-self: center;
 }
 
@@ -43,4 +48,22 @@ ul li:nth-child(3n){
 
 ul li:nth-child(-n+6){
     border-bottom:3px black solid;
+}
+
+dialog{
+    border-radius: 10px;
+    height: 100px;
+}
+p{
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 35px;
+}
+
+button{
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    height: 30px;
 }

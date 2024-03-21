@@ -111,8 +111,12 @@ const gameFlow = function (){
 
 
     function endGame(winningArr){
+        const dialog = document.querySelector("dialog");
+        const button = document.querySelector("button");
         if(winningArr === 1){
-            alert("Player 1 has won the game");
+            dialog.showModal();
+            const dialogWindow = document.querySelector("p");
+            dialogWindow.textContent = "Player 1 has won the game";
         }
         else if(winningArr === 2){
             alert("Player 2 has won the game");
@@ -120,6 +124,9 @@ const gameFlow = function (){
         else{
             alert("It's a tie");
         }
+        button.addEventListener("click",() =>{
+            dialog.close();
+        })
     }
     return {gameStart,endGame};
 }
