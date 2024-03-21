@@ -6,6 +6,7 @@ const gameBoard = (function (){
 
     function appendCell(cell,character){
         grid[cell] = character;
+        console.log(grid);
     }
 
     function isAlreadyfilled(cell){
@@ -46,15 +47,9 @@ const players = (function (){
     function checkForWinP1(){ 
         const winningPattern = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
         if(player1.length >= 3){
-            for(let i = 0;player1.length - i >= 3;i++){
-                const tempArr = [];
-                for(let j = 0;j < 3;j++){
-                    tempArr.push(player1[j + i]);
-                }
-                for(let j = 0;j < winningPattern.length;j++){
-                    if(arrayEquals(tempArr,winningPattern[j])){
-                        return true;
-                    }
+            for(let i = 0;i < winningPattern.length;i++){
+                if(winningPattern[i].every(playerOne => player1.includes(playerOne))){
+                    return true;
                 }
             }
         }
@@ -64,15 +59,9 @@ const players = (function (){
     function checkForWinP2(){ 
         const winningPattern = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
         if(player2.length >= 3){
-            for(let i = 0;player2.length - i >= 3;i++){
-                const tempArr = [];
-                for(let j = 0;j < 3;j++){
-                    tempArr.push(player2[j + i]);
-                }
-                for(let j = 0;j < winningPattern.length;j++){
-                    if(arrayEquals(tempArr,winningPattern[j])){
-                        return true;
-                    }
+            for(let i = 0;i < winningPattern.length;i++){
+                if(winningPattern[i].every(playerTwo => player2.includes(playerTwo))){
+                    return true;
                 }
             }
         }
@@ -88,63 +77,38 @@ const gameFlow = function (){
     
 
     function gameStart(){
-        // for(let i = 0;i < 9;i++){
-
-        //     // let cell = parseInt(prompt(`Player${+playerTurn + 1}`)) - 1;
-
-        //     while(checkForErrors(cell)){
-        //         // cell = parseInt(prompt(`Select a valid cell player${+playerTurn + 1}`)) - 1;
-        //     }
-
-        //     if(!playerTurn){
-        //         players.cellSelected(cell,!playerTurn);
-        //         gameBoard.appendCell(cell,"X");
-        //         let winningPlayer = players.checkForWinP1();
-        //         if(winningPlayer === true){
-        //             endGame(1);
-        //             return ;
-        //         }
-        //     }
-        //     else{
-        //         players.cellSelected(cell,!playerTurn);
-        //         gameBoard.appendCell(cell,"O");
-        //         let winningPlayer = players.checkForWinP2();
-        //         if(winningPlayer === true){
-        //             endGame(2);
-        //             return ;
-        //         }
-        //     }
-
-        //     playerTurn = !playerTurn;
-        // }
-        // endGame(3);
         grid.forEach(containers => {
             containers.addEventListener("click" , (e) =>{
                 let cell = e.target.className;
-                cell = parseInt(cell.charAt(cell.length - 1));
-                players.cellSelected(cell,playerTurn); 
-                if(playerTurn){
-                    const circle = document.createElement("img");
-                    circle.src = "Images/1811_circle.png";
-                    e.target.appendChild(circle); 
+                cell = parseInt(cell.charAt(cell.length - 1)) - 1;
+                if(!gameBoard.isAlreadyfilled(cell)){
+                    players.cellSelected(cell,playerTurn); 
+                    if(playerTurn){
+                        gameBoard.appendCell(cell,"O");
+                        const circle = document.createElement("img");
+                        circle.src = "Images/1811_circle.png";
+                        e.target.appendChild(circle);
+                    }
+                    else{
+                        gameBoard.appendCell(cell,"X");
+                        const cross = document.createElement("img");
+                        cross.src = "Images/cross-23.png";
+                        e.target.appendChild(cross);
+                    }
+                    playerTurn = !playerTurn;
                 }
-                else{
-                    const cross = document.createElement("img");
-                    cross.src = "Images/cross-23.png";
-                    e.target.appendChild(cross);
+                if(players.checkForWinP1()){
+                    endGame(1);
+                    return;
                 }
-                playerTurn = !playerTurn;
+                if(players.checkForWinP2()){
+                    endGame(2);
+                    return;
+                }
             })
         });
     }
-    function checkForErrors(cell){
-        if(typeof(cell) != "number" ||cell < 0 || cell > 8 ||gameBoard.isAlreadyfilled(cell)){
-            return true;
-        }
-        else{
-        return false;
-        }
-    }
+
 
     function endGame(winningArr){
         if(winningArr === 1){
